@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public float speed;
+    public float jumpSpeed;
+    private bool isJumping;
 
     private int count;
     public Text countText;
@@ -17,6 +19,11 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        //Bool to know if player is jumping.
+        isJumping = false;
+
+        //Counter
         count = 0;
         setCountText();
         winText.text = "";
@@ -30,6 +37,17 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
         rb.AddForce(movement * speed);
+
+        if (Input.GetKey(KeyCode.Space) && !isJumping)
+        {
+            Jump();
+        }
+    }
+
+    void Jump()
+    {
+        isJumping = true;
+        rb.AddForce(new Vector3(0.0f, 1f, 0.0f)*jumpSpeed, ForceMode.Impulse);
     }
 
     void OnTriggerEnter(Collider other)
@@ -39,6 +57,14 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count++;
             setCountText();
+        }
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            isJumping = false;
         }
     }
 
