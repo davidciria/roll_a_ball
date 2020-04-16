@@ -64,17 +64,23 @@ public class PlayerController : MonoBehaviour
 
         rb.AddForce(movement * speed);
 
+        if (Input.GetKey(KeyCode.Space) && !isJumping)
+        {
+            Jump();
+        }
     }
 
     void Jump()
     {
         isJumping = true;
         rb.AddForce(new Vector3(0.0f, 1f, 0.0f)*jumpSpeed, ForceMode.Impulse);
+
     }
 
     void returnToInitPosition()
     {
         transform.SetPositionAndRotation(initPosition, transform.rotation);
+
     }
 
     void OnTriggerEnter(Collider other)
